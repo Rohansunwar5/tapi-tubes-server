@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-const BULLET_POINT_MAX_LENGTH = 120;
-
 const imageSchema = new mongoose.Schema(
     {
         url: {
