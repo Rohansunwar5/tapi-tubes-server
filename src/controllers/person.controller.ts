@@ -44,3 +44,10 @@ export const editAPerson = async (req: Request, res: Response, next: NextFunctio
   });
   next(response);
 };
+
+
+export const deleteAPerson = async (req: Request, res: Response, next: NextFunction) => {
+  const { personId } = req.params;
+  const response = await personService.deletePerson(personId);
+  next(response);
+};

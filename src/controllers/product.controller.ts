@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import productService from "../services/product.service";
+import personService from "../services/person.service";
 
 interface MulterFiles {
   mainImage?: Express.Multer.File[];
@@ -75,5 +76,12 @@ export const editAProduct = async (req: Request, res: Response, next: NextFuncti
     mainImage,
     extraImages,
   });
+  next(response);
+};
+
+export const deleteProduct = async (req: Request, res: Response, next: NextFunction) => {
+  const { productId } = req.params;
+  const response = await productService.deleteProduct(productId);
+
   next(response);
 };

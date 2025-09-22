@@ -27,4 +27,8 @@ export class ProductDescriptionRepository {
     async updateProduct(productId: string, updateData: Partial<ICreateProductParams>) {
         return this._model.findByIdAndUpdate(productId, updateData, {new: true});
     }
+
+    async deleteProduct(productId: string) {
+        return this._model.findByIdAndDelete(productId);
+    }
 }

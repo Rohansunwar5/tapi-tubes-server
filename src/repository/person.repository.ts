@@ -25,4 +25,8 @@ export class PersonRepository {
   async updatePerson(personId: string, updateData: Partial<ICreatePersonParams>) {
     return this._model.findByIdAndUpdate(personId, updateData, { new: true });
   }
+
+  async deletePerson(personId: string) {
+    return this._model.findByIdAndDelete(personId);
+  }
 }

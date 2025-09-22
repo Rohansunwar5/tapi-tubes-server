@@ -4,6 +4,7 @@ import isAdminLoggedIn from "../middlewares/isAdminLoggedIn.middleware";
 import { asyncHandler } from "../utils/asynchandler";
 import {
   createAPerson,
+  deleteAPerson,
   editAPerson,
   getAPerson,
   getAllPersons,
@@ -30,6 +31,12 @@ personRouter.put(
   isAdminLoggedIn,
   uploadPersonImage,
   asyncHandler(editAPerson)
+);
+
+personRouter.delete(
+  "/delete/:personId",
+  isAdminLoggedIn,
+  asyncHandler(deleteAPerson)
 );
 
 export default personRouter;

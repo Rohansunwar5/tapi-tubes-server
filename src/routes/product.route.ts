@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createAProduct, editAProduct, getAllProducts, getAProduct } from "../controllers/product.controller";
+import { createAProduct, deleteProduct, editAProduct, getAllProducts, getAProduct } from "../controllers/product.controller";
 import isAdminLoggedIn from "../middlewares/isAdminLoggedIn.middleware";
 import { uploadProductImages } from "../middlewares/multer.middleware";
 import { asyncHandler } from "../utils/asynchandler";
@@ -23,11 +23,10 @@ productRouter.put(
   asyncHandler(editAProduct)
 );
 
-// Optionally you can add a delete endpoint if needed by your business logic
-// productRouter.delete(
-//   "/delete/:productId",
-//   isAdminLoggedIn,
-//   asyncHandler(deleteAProduct)
-// );
+productRouter.delete(
+  "/delete/:productId",
+  isAdminLoggedIn,
+  asyncHandler(deleteProduct)
+);
 
 export default productRouter;

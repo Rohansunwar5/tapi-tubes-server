@@ -77,6 +77,17 @@ class PersonService {
     if (!updatedPerson) throw new InternalServerError("Person update failed");
     return updatedPerson;
   }
+
+  async deletePerson(personId: string) {
+    const existingPerson = await this._personRepository.getPersonById(personId);
+    if (!existingPerson) throw new NotFoundError("Person not found");
+
+    const deletedPerson = await this._personRepository.deletePerson(personId);
+    if (!deletedPerson) throw new InternalServerError("Person deletion failed");
+
+    return { message: "Person deleted successfully", deletedPerson };
+  }
+  
 }
 
 export default new PersonService(new PersonRepository());

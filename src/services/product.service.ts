@@ -117,6 +117,16 @@ class ProductService {
 
     return updatedProduct;
   }
+
+  async deleteProduct(productId: string) {
+    const existingProduct = await this._productRepository.getProductById(productId);
+    if (!existingProduct) throw new NotFoundError("Product not found");
+
+    const deletedProduct = await this._productRepository.deleteProduct(productId);
+    if (!deletedProduct) throw new InternalServerError("Product deletion failed");
+
+    return deletedProduct;
+  }
 }
 
 export default new ProductService(new ProductDescriptionRepository());
