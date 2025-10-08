@@ -22,7 +22,6 @@ export const getAProduct = async (req: Request, res: Response, next: NextFunctio
 export const createAProduct = async (req: Request, res: Response, next: NextFunction) => {
   const { name, description } = req.body;
 
-  // Parse JSON strings to arrays if needed
   let benefits = req.body.benefits;
   let applications = req.body.applications;
 

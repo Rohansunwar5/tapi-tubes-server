@@ -8,7 +8,6 @@ const productRouter = Router();
 
 productRouter.get("/", asyncHandler(getAllProducts));
 productRouter.get("/:productId", asyncHandler(getAProduct));
-
 productRouter.post(
   "/create",
   isAdminLoggedIn,
