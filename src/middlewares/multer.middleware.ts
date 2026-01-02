@@ -22,6 +22,7 @@ const upload = multer({
 const uploadProductImages = multer().fields([
   { name: "mainImage", maxCount: 1 },
   { name: "extraImages", maxCount: 2 },
+  { name: "sizeCharts", maxCount: 5 }, // Added - adjust maxCount as needed
 ]);
 
 const blogUpload = multer({

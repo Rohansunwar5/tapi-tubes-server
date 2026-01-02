@@ -1,19 +1,19 @@
 import mongoose from "mongoose";
 
 const imageSchema = new mongoose.Schema(
-    {
-        url: {
-            type: String,
-            required: true,
-        },
+  {
+    url: {
+      type: String,
+      required: true,
     },
-    {
-        _id: false
-    }
+  },
+  {
+    _id: false
+  }
 )
 
 const benefitSchema = new mongoose.Schema(
-    {
+  {
     point: {
       type: String,
       required: true,
@@ -23,8 +23,7 @@ const benefitSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-  },
-  { _id: false }
+  }, { _id: false }
 );
 
 const applicationSchema = new mongoose.Schema(
@@ -41,6 +40,20 @@ const applicationSchema = new mongoose.Schema(
   },
   { _id: false }
 );
+
+const sizeChartSchema = new mongoose.Schema (
+  {
+    url: {
+      type: String,
+      required: true,
+    },
+    title: {
+      type: String,
+      trime: true,
+    }
+  },
+  { _id: false }
+)
 
 const productSchema = new mongoose.Schema(
   {
@@ -67,9 +80,13 @@ const productSchema = new mongoose.Schema(
       required: true, 
     },
     extraImages: {
-        type: [imageSchema],
-        required: true,
-        maxLength: 2,
+      type: [imageSchema],
+      required: true,
+      maxLength: 2,
+    },
+    sizeCharts: {
+      type: [sizeChartSchema],
+      default: []
     }
   },
   { timestamps: true }
@@ -89,9 +106,12 @@ export interface IProduct extends mongoose.Schema {
     point: string;
     description?: string;
   }>;
-    mainImage: { url: string };
-    extraImages: Array<{ url: string }>;
-
+  mainImage: { url: string };
+  extraImages: Array<{ url: string }>;
+  sizeCharts: Array<{
+    url: string;
+    title?: string;
+  }>;
 }
 
 export default mongoose.model<IProduct>("Product", productSchema);

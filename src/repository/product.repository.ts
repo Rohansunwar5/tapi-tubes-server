@@ -1,12 +1,13 @@
 import productDescriptionModel from "../models/productDescription.model";
 
 export interface ICreateProductParams {
-    name: string;
-    description: string;
-    benefits: Array<{point: string; description?: string}>;
-    applications: Array<{point: string; description?: string}>;
-    mainImage: {url: string; publicId: string};
-    extraImages: Array<{url: string; publicId: string}>;
+  name: string;
+  description: string;
+  benefits: Array<{ point: string; description?: string }>;
+  applications: Array<{ point: string; description?: string }>;
+  mainImage: { url: string };
+  extraImages: Array<{ url: string }>;
+  sizeCharts?: Array<{ url: string; title?: string }>;
 }
 
 export class ProductDescriptionRepository {

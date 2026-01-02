@@ -8,19 +8,9 @@ const productRouter = Router();
 
 productRouter.get("/", asyncHandler(getAllProducts));
 productRouter.get("/:productId", asyncHandler(getAProduct));
-productRouter.post(
-  "/create",
-  isAdminLoggedIn,
-  uploadProductImages,
-  asyncHandler(createAProduct)
-);
+productRouter.post("/create", isAdminLoggedIn, uploadProductImages, asyncHandler(createAProduct));
 
-productRouter.put(
-  "/edit/:productId",
-  isAdminLoggedIn,
-  uploadProductImages,
-  asyncHandler(editAProduct)
-);
+productRouter.put("/edit/:productId", isAdminLoggedIn, uploadProductImages, asyncHandler(editAProduct));
 
 productRouter.delete(
   "/delete/:productId",
