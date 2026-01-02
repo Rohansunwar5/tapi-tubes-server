@@ -3,6 +3,7 @@ import { InternalServerError } from "../errors/internal-server.error";
 import { NotFoundError } from "../errors/not-found.error";
 import { PersonRepository } from "../repository/person.repository";
 import { uploadToCloudinary } from "../utils/cloudinary.util";
+import { uploadToS3 } from "../utils/s3.util";
 
 interface CreatePersonParams {
   name: string;
@@ -22,10 +23,12 @@ interface EditPersonParams {
 class PersonService {
   constructor(private readonly _personRepository: PersonRepository) {}
 
-  private async handleImageUpload(file: Express.Multer.File): Promise<{ url: string }> {
-    const uploadResult = await uploadToCloudinary(file);
-    return { url: uploadResult };
-  }
+ private async handleImageUpload(
+  file: Express.Multer.File
+): Promise<{ url: string }> {
+  const url = await uploadToS3(file, "tapi-tubes/persons");
+  return { url };
+}
 
   async getAllPersons() {
     const persons = await this._personRepository.getAllPersons();
@@ -40,43 +43,62 @@ class PersonService {
   }
 
   async createPerson(params: CreatePersonParams) {
-    const { name, designation, description, image } = params;
+  const { name, designation, description, image } = params;
 
-    if (!image) throw new BadRequestError("Image is required");
+  if (!image) throw new BadRequestError("Image is required");
 
-    const imageUrl = await this.handleImageUpload(image);
+  const imageData = await this.handleImageUpload(image);
 
-    const personData = {
-      name,
-      designation,
-      description,
-      image: imageUrl,
-    };
+  const personData = {
+    name,
+    designation,
+    description,
+    image: imageData, // { url }
+  };
 
-    const createdPerson = await this._personRepository.createPerson(personData);
+  const createdPerson = await this._personRepository.createPerson(personData);
 
-    if (!createdPerson) throw new InternalServerError("Person creation failed");
-
-    return createdPerson;
+  if (!createdPerson) {
+    throw new InternalServerError("Person creation failed");
   }
+
+  return createdPerson;
+}
+
 
 
   async editPerson(params: EditPersonParams) {
-    const { personId, name, designation, description, image } = params;
-    const existingPerson = await this._personRepository.getPersonById(personId);
-    if (!existingPerson) throw new NotFoundError("Person not found");
-    let imageUrl = existingPerson.image;
-    if (image) {
-      imageUrl = await this.handleImageUpload(image);
-    }
-    const updateData: any = { image: imageUrl };
-    if (name) updateData.name = name;
-    if (designation) updateData.designation = designation;
-    if (description) updateData.description = description;
-    const updatedPerson = await this._personRepository.updatePerson(personId, updateData);
-    if (!updatedPerson) throw new InternalServerError("Person update failed");
-    return updatedPerson;
+  const { personId, name, designation, description, image } = params;
+
+  const existingPerson = await this._personRepository.getPersonById(personId);
+  if (!existingPerson) throw new NotFoundError("Person not found");
+
+  let imageData = existingPerson.image;
+
+  if (image) {
+    imageData = await this.handleImageUpload(image);
   }
+
+  const updateData: any = {
+    image: imageData,
+  };
+
+  if (name) updateData.name = name;
+  if (designation) updateData.designation = designation;
+  if (description) updateData.description = description;
+
+  const updatedPerson = await this._personRepository.updatePerson(
+    personId,
+    updateData
+  );
+
+  if (!updatedPerson) {
+    throw new InternalServerError("Person update failed");
+  }
+
+  return updatedPerson;
+}
+
 
   async deletePerson(personId: string) {
     const existingPerson = await this._personRepository.getPersonById(personId);
